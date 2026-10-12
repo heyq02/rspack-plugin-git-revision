@@ -1,4 +1,4 @@
-# rspack-plugin-git-revision
+# @heyq02/rspack-plugin-git-revision
 
 Rspack / Rsbuild port of [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin).
 
@@ -7,16 +7,16 @@ Emits `VERSION`, `COMMITHASH`, `LASTCOMMITDATETIME`, and optionally `BRANCH` dur
 ## Install
 
 ```bash
-npm install -D rspack-plugin-git-revision
+npm install -D @heyq02/rspack-plugin-git-revision
 # or
-pnpm add -D rspack-plugin-git-revision
+pnpm add -D @heyq02/rspack-plugin-git-revision
 ```
 
 ## Rspack
 
 ```js
 import { DefinePlugin } from '@rspack/core'
-import { GitRevisionRspackPlugin } from 'rspack-plugin-git-revision'
+import { GitRevisionRspackPlugin } from '@heyq02/rspack-plugin-git-revision'
 
 const gitRevisionPlugin = new GitRevisionRspackPlugin({ branch: true })
 
@@ -41,7 +41,7 @@ export default {
 
 ```js
 import { defineConfig } from '@rsbuild/core'
-import { pluginGitRevision } from 'rspack-plugin-git-revision'
+import { pluginGitRevision } from '@heyq02/rspack-plugin-git-revision'
 
 export default defineConfig({
   plugins: [

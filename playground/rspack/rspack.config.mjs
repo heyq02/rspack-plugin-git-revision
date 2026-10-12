@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DefinePlugin } from '@rspack/core';
-import { GitRevisionRspackPlugin } from 'rspack-plugin-git-revision';
+import { GitRevisionRspackPlugin } from '@heyq02/rspack-plugin-git-revision';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Use the monorepo root as the git work tree.
