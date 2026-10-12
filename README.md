@@ -148,6 +148,7 @@ pnpm play:rsbuild
 | `tests/fixture-integration.test.ts`                   | Upstream fixture values on Rspack                   |
 | `tests/webpack-parity.test.ts`                        | Side-by-side asset / filename parity                |
 | `tests/feature-parity.test.ts`                        | Documented API / path / CSS / custom-command parity |
+| `tests/p0-drop-in.test.ts`                            | chunkFilename / datetime tokens, negative git, DefinePlugin |
 
 Fixtures under `fixtures/` are copied from [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) so expected VERSION / COMMITHASH / BRANCH stay bit-identical.
 

@@ -11,10 +11,18 @@ export interface WebpackBuildResult {
   publicPath?: string;
 }
 
+export interface WebpackBuildExtras {
+  /** Merge into default `output` (path / clean stay owned by the helper). */
+  output?: Record<string, unknown>;
+  entry?: string | string[] | Record<string, string>;
+  plugins?: webpack.Configuration['plugins'];
+}
+
 export async function buildWithWebpack(
   projectDir: string,
   buildDir: string,
   pluginOptions: GitRevisionPluginOptions = {},
+  extras: WebpackBuildExtras = {},
 ): Promise<WebpackBuildResult> {
   const plugin = new GitRevisionPlugin({
     gitWorkTree: projectDir,
@@ -27,7 +35,7 @@ export async function buildWithWebpack(
   const config = {
     mode: 'production' as const,
     context: projectDir,
-    entry: './index.js',
+    entry: extras.entry ?? './index.js',
     target: 'web' as const,
     output: {
       path: buildDir,
@@ -35,6 +43,7 @@ export async function buildWithWebpack(
       publicPath:
         'http://cdn.com/assets/[git-revision-branch]/[git-revision-version]/[git-revision-hash]',
       filename: '[name]-[git-revision-branch]-[git-revision-version].js',
+      ...extras.output,
     },
     module: {
       rules: [
@@ -50,6 +59,7 @@ export async function buildWithWebpack(
     },
     plugins: [
       plugin,
+      ...(extras.plugins ?? []),
       {
         apply(compiler: webpack.Compiler) {
           compiler.hooks.compilation.tap('CapturePublicPath', (compilation) => {

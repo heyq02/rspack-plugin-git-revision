@@ -13,10 +13,18 @@ export interface RspackBuildResult {
   };
 }
 
+export interface RspackBuildExtras {
+  /** Merge into default `output` (path / clean stay owned by the helper). */
+  output?: Record<string, unknown>;
+  entry?: Configuration['entry'];
+  plugins?: Configuration['plugins'];
+}
+
 export async function buildWithRspack(
   projectDir: string,
   buildDir: string,
   pluginOptions: GitRevisionPluginOptions = {},
+  extras: RspackBuildExtras = {},
 ): Promise<RspackBuildResult> {
   const plugin = new GitRevisionRspackPlugin({
     gitWorkTree: projectDir,
@@ -28,7 +36,7 @@ export async function buildWithRspack(
   const config: Configuration = {
     mode: 'production',
     context: projectDir,
-    entry: './index.js',
+    entry: extras.entry ?? './index.js',
     target: 'web',
     output: {
       path: buildDir,
@@ -36,6 +44,7 @@ export async function buildWithRspack(
       publicPath:
         'http://cdn.com/assets/[git-revision-branch]/[git-revision-version]/[git-revision-hash]',
       filename: '[name]-[git-revision-branch]-[git-revision-version].js',
+      ...extras.output,
     },
     module: {
       rules: [
@@ -51,6 +60,7 @@ export async function buildWithRspack(
     },
     plugins: [
       plugin,
+      ...(extras.plugins ?? []),
       {
         name: 'CapturePublicPath',
         apply(compiler: Compiler) {
