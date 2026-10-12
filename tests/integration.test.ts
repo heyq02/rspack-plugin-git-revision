@@ -1,24 +1,9 @@
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
 import { describe, expect, it } from '@rstest/core';
 import { rspack } from '@rspack/core';
 import { GitRevisionRspackPlugin } from '../src/plugin.ts';
-
-function initTempGitRepo(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'git-revision-'));
-  execFileSync('git', ['init'], { cwd: dir });
-  execFileSync('git', ['config', 'user.email', 'test@example.com'], {
-    cwd: dir,
-  });
-  execFileSync('git', ['config', 'user.name', 'Test'], { cwd: dir });
-  fs.writeFileSync(path.join(dir, 'README.md'), 'hello\n');
-  execFileSync('git', ['add', 'README.md'], { cwd: dir });
-  execFileSync('git', ['commit', '-m', 'init'], { cwd: dir });
-  execFileSync('git', ['branch', '-M', 'main'], { cwd: dir });
-  return dir;
-}
+import { initTempGitRepo } from './helpers/temp-git.ts';
 
 describe('GitRevisionRspackPlugin integration', () => {
   it('emits VERSION / COMMITHASH / BRANCH / LASTCOMMITDATETIME', async () => {
