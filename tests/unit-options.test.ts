@@ -1,8 +1,9 @@
 import { describe, expect, it, rstest } from '@rstest/core';
 import { GitRevisionRspackPlugin } from '../src/plugin.ts';
 import * as runGitModule from '../src/helpers/run-git-command.ts';
+import { initTempGitRepo } from './helpers/temp-git.ts';
 
-describe('custom command options', () => {
+describe('plugin options', () => {
   it('rejects lightweightTags with custom versionCommand', () => {
     expect(
       () =>
@@ -37,5 +38,14 @@ describe('custom command options', () => {
     expect(spy).toHaveBeenCalledWith(undefined, 'custom-datetime');
 
     spy.mockRestore();
+  });
+
+  it('reads git metadata from gitWorkTree via getters', () => {
+    const gitWorkTree = initTempGitRepo();
+    const plugin = new GitRevisionRspackPlugin({ gitWorkTree, branch: true });
+    expect(plugin.commithash()).toMatch(/^[0-9a-f]{40}$/);
+    expect(plugin.version().length).toBeGreaterThan(0);
+    expect(plugin.branch()).toBe('main');
+    expect(plugin.lastcommitdatetime()).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 });

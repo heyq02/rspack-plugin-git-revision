@@ -105,7 +105,7 @@ plugin.lastcommitdatetime();
 | `lastCommitDateTimeCommand` | `log -1 --format=%cI`         | Git command for `LASTCOMMITDATETIME`           |
 | `lightweightTags`           | `false`                       | Append `--tags` to the default version command |
 
-Custom git commands are executed without sanitization — do not pass untrusted input.
+Custom `*Command` options are appended to a shell `git …` invocation **without sanitization**, matching [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) (intentional parity, not a hardening gap). Do not pass untrusted input.
 
 ## Feature parity
 
@@ -141,15 +141,16 @@ pnpm play:rsbuild
 
 ### Test matrix
 
-| Suite                                                 | What it covers                                                 |
-| ----------------------------------------------------- | -------------------------------------------------------------- |
-| `tests/plugin.test.ts` / `tests/unit-options.test.ts` | Options + public API against a temp git repo                   |
-| `tests/path-substitutions.test.ts`                    | `[git-revision-*]` rewriting on `output` / rules               |
-| `tests/fixture-integration.test.ts`                   | Upstream fixture values on Rspack                              |
-| `tests/webpack-parity.test.ts`                        | Side-by-side asset / filename parity                           |
-| `tests/feature-parity.test.ts`                        | Documented API / path / CSS / custom-command parity            |
-| `tests/p0-drop-in.test.ts`                            | chunkFilename / datetime tokens, negative git, DefinePlugin    |
-| `tests/p1-assetpath.test.ts`                          | late getPath, file-loader query, watch mutation, Rsbuild build |
+| Suite                                                        | What it covers                                                 |
+| ------------------------------------------------------------ | -------------------------------------------------------------- |
+| `tests/unit-options.test.ts` / `tests/integration.test.ts`   | Options, getters, emit against a temp git repo                 |
+| `tests/build-git-command.test.ts` / `tests/git-edge.test.ts` | Shell command builder + detached HEAD / describe edges         |
+| `tests/path-substitutions.test.ts`                           | `[git-revision-*]` rewriting on `output` / rules               |
+| `tests/fixture-integration.test.ts`                          | Upstream fixture values on Rspack                              |
+| `tests/webpack-parity.test.ts`                               | Side-by-side asset / filename parity                           |
+| `tests/feature-parity.test.ts`                               | Documented API / path / CSS / custom-command parity            |
+| `tests/p0-drop-in.test.ts`                                   | chunkFilename / datetime tokens, negative git, DefinePlugin    |
+| `tests/p1-assetpath.test.ts`                                 | late getPath, file-loader query, watch mutation, Rsbuild build |
 
 Fixtures under `fixtures/` are copied from [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) so expected VERSION / COMMITHASH / BRANCH stay bit-identical.
 
