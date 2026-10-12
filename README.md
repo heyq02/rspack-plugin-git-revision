@@ -101,6 +101,19 @@ pnpm play:rspack
 pnpm play:rsbuild
 ```
 
+## Release
+
+Same flow as [`@heyq02/rstack-config`](https://github.com/heyq02/rstack-config):
+
+```bash
+pnpm release          # bump version + CHANGELOG + git tag (no GitHub release)
+git push --follow-tags
+```
+
+Pushing a `v*` tag runs [`.github/workflows/release.yml`](.github/workflows/release.yml) (npm publish via [sxzz/workflows](https://github.com/sxzz/workflows)). Every push/PR also gets a preview package from [`.github/workflows/release-commit.yml`](.github/workflows/release-commit.yml) (`pkg-pr-new`).
+
+Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) for this GitHub repo so OIDC publish works without `NPM_TOKEN`.
+
 ### Test matrix
 
 | Suite | What it covers |
