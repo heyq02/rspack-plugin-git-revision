@@ -1,0 +1,28 @@
+name: Coverage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JS
+        uses: sxzz/workflows/setup-js@main
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Coverage
+        run: pnpm run test:coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: heyq02/rspack-plugin-git-revision

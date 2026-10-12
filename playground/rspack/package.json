@@ -6,8 +6,8 @@
     "build": "rspack build"
   },
   "devDependencies": {
+    "@heyq02/rspack-plugin-git-revision": "workspace:*",
     "@rspack/cli": "^1.6.8",
-    "@rspack/core": "^1.6.8",
-    "@heyq02/rspack-plugin-git-revision": "workspace:*"
+    "@rspack/core": "^1.6.8"
   }
 }

@@ -1,3 +1,32 @@
 packages:
   - '.'
   - 'playground/*'
+
+allowBuilds:
+  '@parcel/watcher': true
+  simple-git-hooks: true
+
+# rsbuild-plugin-arethetypeswrong needs the TypeScript JS API (<7).
+# Use the official TS 6 compatibility package for `typescript` resolution.
+# See: https://github.com/rstackjs/rsbuild-plugin-arethetypeswrong/pull/71
+peerDependencyRules:
+  allowedVersions:
+    typescript: '*'
+
+minimumReleaseAgeExclude:
+  - '@rstackjs/cli-darwin-arm64@0.8.3'
+  - '@rstackjs/cli-darwin-x64@0.8.3'
+  - '@rstackjs/cli-linux-arm64-gnu@0.8.3'
+  - '@rstackjs/cli-linux-arm64-musl@0.8.3'
+  - '@rstackjs/cli-linux-ppc64-gnu@0.8.3'
+  - '@rstackjs/cli-linux-riscv64-gnu@0.8.3'
+  - '@rstackjs/cli-linux-riscv64-musl@0.8.3'
+  - '@rstackjs/cli-linux-s390x-gnu@0.8.3'
+  - '@rstackjs/cli-linux-x64-gnu@0.8.3'
+  - '@rstackjs/cli-linux-x64-musl@0.8.3'
+  - '@rstackjs/cli-win32-arm64-msvc@0.8.3'
+  - '@rstackjs/cli-win32-ia32-msvc@0.8.3'
+  - '@rstackjs/cli-win32-x64-msvc@0.8.3'
+  - rstack@0.8.3
+  - '@heyq02/rstack-config@0.0.2'
+  - eslint-plugin-de-morgan@2.2.1

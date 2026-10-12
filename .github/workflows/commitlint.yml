@@ -1,0 +1,24 @@
+name: Commitlint
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JS
+        uses: sxzz/workflows/setup-js@main
+        with:
+          # Need full history so base.sha..head.sha resolves.
+          fetch-all: true
+
+      - name: Lint PR commits
+        run: >
+          pnpm exec commitlint
+          --from "${{ github.event.pull_request.base.sha }}"
+          --to "${{ github.event.pull_request.head.sha }}"
+          --verbose

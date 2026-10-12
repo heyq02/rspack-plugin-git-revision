@@ -8,11 +8,7 @@ import { rspack } from '@rspack/core';
 import { GitRevisionPlugin as WebpackGitRevisionPlugin } from 'git-revision-webpack-plugin';
 import { GitRevisionRspackPlugin } from '../src/plugin.ts';
 import { pluginGitRevision } from '../src/rsbuild-plugin.ts';
-import {
-  EXPECTED,
-  prepareFixture,
-  readAsset,
-} from './helpers/fixture.ts';
+import { EXPECTED, prepareFixture, readAsset } from './helpers/fixture.ts';
 import { buildWithRspack } from './helpers/build-rspack.ts';
 import { buildWithWebpack } from './helpers/build-webpack.ts';
 
@@ -144,9 +140,7 @@ describe('feature parity: path substitutions', () => {
     });
 
     expect(
-      fs.existsSync(
-        path.join(buildDir, `main-master-${EXPECTED.version}.js`),
-      ),
+      fs.existsSync(path.join(buildDir, `main-master-${EXPECTED.version}.js`)),
     ).toBe(true);
   }, 60_000);
 
@@ -177,8 +171,7 @@ describe('feature parity: path substitutions', () => {
             path: buildDir,
             clean: true,
             filename: '[name].js',
-            cssFilename:
-              '[name]-[git-revision-branch]-[git-revision-hash].css',
+            cssFilename: '[name]-[git-revision-branch]-[git-revision-hash].css',
           },
           experiments: {
             css: true,
@@ -196,7 +189,10 @@ describe('feature parity: path substitutions', () => {
 
     const files = fs.readdirSync(buildDir);
     expect(
-      files.some((f) => f.includes(`master-${EXPECTED.commithash}`) && f.endsWith('.css')),
+      files.some(
+        (f) =>
+          f.includes(`master-${EXPECTED.commithash}`) && f.endsWith('.css'),
+      ),
     ).toBe(true);
   }, 60_000);
 });
