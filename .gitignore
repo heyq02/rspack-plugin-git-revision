@@ -1,5 +1,6 @@
 node_modules
 dist
+tmp
 coverage
 *.log
 .DS_Store
@@ -8,3 +9,4 @@ playground/*/node_modules
 .rstack
 .turbo
 *.tsbuildinfo
+

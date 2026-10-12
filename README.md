@@ -88,13 +88,29 @@ plugin.lastcommitdatetime()
 
 ## Development
 
+Tooling is [Rstack CLI](https://github.com/rstackjs/rstack-cli) + [`@heyq02/rstack-config`](https://github.com/heyq02/rstack-config).
+
 ```bash
 pnpm install
-pnpm build
-pnpm test
+pnpm build          # rs lib
+pnpm test           # rs test
+pnpm test:parity
+pnpm lint           # rs lint
+pnpm check          # rs check
 pnpm play:rspack
 pnpm play:rsbuild
 ```
+
+### Test matrix
+
+| Suite | What it covers |
+| --- | --- |
+| `tests/plugin.test.ts` / `tests/unit-options.test.ts` | Options + public API against a temp git repo |
+| `tests/path-substitutions.test.ts` | `[git-revision-*]` rewriting on `output` / rules |
+| `tests/fixture-integration.test.ts` | Upstream fixture values (`v1.0.0-1-g9a15b3b`, etc.) on Rspack |
+| `tests/webpack-parity.test.ts` | Side-by-side: `git-revision-webpack-plugin` vs this plugin on the same fixtures |
+
+Fixtures under `fixtures/` are copied from [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) so expected VERSION / COMMITHASH / BRANCH stay bit-identical.
 
 ## License
 

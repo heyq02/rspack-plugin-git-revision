@@ -1,6 +1,7 @@
 import type { Compiler, Compilation } from '@rspack/core';
 import { sources } from '@rspack/core';
 import { runGitCommand } from './helpers/run-git-command.ts';
+import { applyPathSubstitutions } from './path-substitutions.ts';
 
 export interface BuildFileOptions {
   compiler: Compiler;
@@ -8,34 +9,6 @@ export interface BuildFileOptions {
   command: string;
   replacePattern: RegExp;
   asset: string;
-}
-
-function applyPathSubstitutions(
-  compiler: Compiler,
-  replacePattern: RegExp,
-  data: string,
-): void {
-  const { output } = compiler.options;
-  if (!output || !data) return;
-
-  const keys = [
-    'filename',
-    'chunkFilename',
-    'cssFilename',
-    'cssChunkFilename',
-    'publicPath',
-    'hotUpdateChunkFilename',
-    'hotUpdateMainFilename',
-  ] as const;
-
-  for (const key of keys) {
-    const current = output[key as keyof typeof output];
-    if (typeof current === 'string') {
-      Object.assign(output, {
-        [key]: current.replace(replacePattern, data),
-      });
-    }
-  }
 }
 
 export function buildFile({
@@ -47,10 +20,18 @@ export function buildFile({
 }: BuildFileOptions): void {
   let data = '';
 
+  const substitute = (value: string) => {
+    applyPathSubstitutions(
+      compiler.options as unknown as Record<string, unknown>,
+      replacePattern,
+      value,
+    );
+  };
+
   // Resolve early so path substitutions work even when Rspack lacks assetPath.
   try {
     data = runGitCommand(gitWorkTree, command) ?? '';
-    applyPathSubstitutions(compiler, replacePattern, data);
+    substitute(data);
   } catch {
     // Defer error to the compilation phase so builds can surface it as a warning/error.
   }
@@ -67,7 +48,7 @@ export function buildFile({
               return;
             }
             data = res;
-            applyPathSubstitutions(compiler, replacePattern, data);
+            substitute(data);
             callback();
           });
         },
