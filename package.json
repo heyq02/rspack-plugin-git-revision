@@ -1,0 +1,71 @@
+{
+  "name": "rspack-plugin-git-revision",
+  "version": "0.1.0",
+  "description": "Rspack / Rsbuild plugin that emits git revision assets (VERSION, COMMITHASH, BRANCH, LASTCOMMITDATETIME).",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/heyq02/rspack-plugin-git-revision",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heyq02/rspack-plugin-git-revision.git"
+  },
+  "bugs": {
+    "url": "https://github.com/heyq02/rspack-plugin-git-revision/issues"
+  },
+  "keywords": [
+    "rspack",
+    "rsbuild",
+    "git",
+    "revision",
+    "version",
+    "commithash",
+    "plugin"
+  ],
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "test": "rstest",
+    "play:rspack": "pnpm build && pnpm --dir playground/rspack build",
+    "play:rsbuild": "pnpm build && pnpm --dir playground/rsbuild build"
+  },
+  "peerDependencies": {
+    "@rsbuild/core": ">=1.0.0",
+    "@rspack/core": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@rsbuild/core": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.6.15",
+    "@rspack/core": "^1.6.8",
+    "@rstest/core": "^0.7.5",
+    "@types/node": "^22.19.1",
+    "tsdown": "^0.15.12",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@10.18.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

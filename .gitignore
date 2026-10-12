@@ -1,0 +1,10 @@
+node_modules
+dist
+coverage
+*.log
+.DS_Store
+playground/*/dist
+playground/*/node_modules
+.rstack
+.turbo
+*.tsbuildinfo

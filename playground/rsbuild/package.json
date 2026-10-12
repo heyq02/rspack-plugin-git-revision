@@ -1,0 +1,12 @@
+{
+  "name": "rspack-plugin-git-revision-playground-rsbuild",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.6.15",
+    "rspack-plugin-git-revision": "workspace:*"
+  }
+}
