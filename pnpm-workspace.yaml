@@ -4,6 +4,7 @@ packages:
 
 allowBuilds:
   '@parcel/watcher': true
+  core-js: true
   simple-git-hooks: true
 
 # rsbuild-plugin-arethetypeswrong needs the TypeScript JS API (<7).
