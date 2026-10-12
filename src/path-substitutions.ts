@@ -81,9 +81,7 @@ function walkRules(
       if (use && typeof use === 'object') {
         const u = use as Record<string, unknown>;
         const opts = (u.options ?? u.query) as
-          | Record<string, unknown>
-          | string
-          | undefined;
+          Record<string, unknown> | string | undefined;
         if (opts && typeof opts === 'object') {
           replaceField(opts, 'name', replacePattern, data);
           replaceField(opts, 'filename', replacePattern, data);

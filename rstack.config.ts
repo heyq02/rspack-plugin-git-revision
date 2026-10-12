@@ -23,7 +23,8 @@ define.extends([
     },
     fmt: {
       singleQuote: true,
-      printWidth: 100,
+      sortPackageJson: true,
+      ignorePatterns: ['.github/**'],
     },
     test: {
       extends: {},

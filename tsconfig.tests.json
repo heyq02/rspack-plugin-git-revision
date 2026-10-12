@@ -2,7 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
-    "types": ["rstack/types", "node"]
+    "types": ["rstack/types", "node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["src", "tests", "rstack.config.ts"]
 }

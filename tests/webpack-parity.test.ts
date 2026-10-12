@@ -77,12 +77,12 @@ async function runParity(
     expect(assetExists(webpackFx.buildDir, expectedTxt)).toBe(true);
     expect(assetExists(rspackFx.buildDir, expectedTxt)).toBe(true);
 
-    expect(fs.statSync(path.join(webpackFx.buildDir, expectedJs)).size).toBeGreaterThan(
-      0,
-    );
-    expect(fs.statSync(path.join(rspackFx.buildDir, expectedJs)).size).toBeGreaterThan(
-      0,
-    );
+    expect(
+      fs.statSync(path.join(webpackFx.buildDir, expectedJs)).size,
+    ).toBeGreaterThan(0);
+    expect(
+      fs.statSync(path.join(rspackFx.buildDir, expectedJs)).size,
+    ).toBeGreaterThan(0);
   }
 }
 
