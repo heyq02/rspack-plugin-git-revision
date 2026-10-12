@@ -56,7 +56,7 @@
     "release": "changelogen --release --no-github",
     "test": "rs test",
     "test:coverage": "rs test --coverage",
-    "test:parity": "rs test tests/webpack-parity.test.ts tests/fixture-integration.test.ts tests/feature-parity.test.ts tests/p0-drop-in.test.ts",
+    "test:parity": "rs test tests/webpack-parity.test.ts tests/fixture-integration.test.ts tests/feature-parity.test.ts tests/p0-drop-in.test.ts tests/p1-assetpath.test.ts",
     "typecheck": "tsc6 --noEmit"
   },
   "devDependencies": {
