@@ -1,31 +1,40 @@
-import { execFile, execFileSync } from 'node:child_process';
+import { exec, execSync } from 'node:child_process';
 import path from 'node:path';
 import { removeEmptyLines } from './remove-empty-lines.ts';
 
 export type GitCommandCallback = (err: Error | null, output: string) => void;
 
-function buildGitArgs(gitWorkTree: string | undefined, command: string): string[] {
-  const commandArgs = command.trim().split(/\s+/).filter(Boolean);
-  if (!gitWorkTree) {
-    return commandArgs;
-  }
-
-  return [
-    `--git-dir=${path.join(gitWorkTree, '.git')}`,
-    `--work-tree=${gitWorkTree}`,
-    ...commandArgs,
-  ];
+/**
+ * Build the same shell command string as git-revision-webpack-plugin.
+ * Custom `*Command` options are appended as-is (unsanitized), matching upstream.
+ */
+export function buildGitCommand(
+  gitWorkTree: string | undefined,
+  command: string,
+): string {
+  return gitWorkTree
+    ? [
+        'git',
+        `--git-dir=${path.join(gitWorkTree, '.git')}`,
+        `--work-tree=${gitWorkTree}`,
+        command,
+      ].join(' ')
+    : ['git', command].join(' ');
 }
 
+/**
+ * Run a git command. Behavior matches git-revision-webpack-plugin
+ * (`child_process.exec` / `execSync` with a shell command string).
+ */
 export function runGitCommand(
   gitWorkTree: string | undefined,
   command: string,
   callback?: GitCommandCallback,
 ): string | null {
-  const args = buildGitArgs(gitWorkTree, command);
+  const gitCommand = buildGitCommand(gitWorkTree, command);
 
   if (callback) {
-    execFile('git', args, (err, stdout) => {
+    exec(gitCommand, (err, stdout) => {
       if (err) {
         callback(err, '');
         return;
@@ -35,5 +44,5 @@ export function runGitCommand(
     return null;
   }
 
-  return removeEmptyLines(String(execFileSync('git', args, { encoding: 'utf8' })));
+  return removeEmptyLines(String(execSync(gitCommand)));
 }

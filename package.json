@@ -37,7 +37,7 @@
     "build": "rs lib",
     "dev": "rs lib --watch",
     "test": "rs test",
-    "test:parity": "rs test tests/webpack-parity.test.ts tests/fixture-integration.test.ts",
+    "test:parity": "rs test tests/webpack-parity.test.ts tests/fixture-integration.test.ts tests/feature-parity.test.ts",
     "test:coverage": "rs test --coverage",
     "lint": "rs lint .",
     "lint:fix": "rs lint --fix .",

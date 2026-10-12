@@ -55,7 +55,11 @@ export async function buildWithWebpack(
           compiler.hooks.compilation.tap('CapturePublicPath', (compilation) => {
             compilation.hooks.processAssets.tap('CapturePublicPath', () => {
               const value = compilation.outputOptions.publicPath;
-              if (typeof value === 'string') resolvedPublicPath = value;
+              // webpack keeps the template on outputOptions; resolve via getPath
+              // so assetPath substitutions (incl. [git-revision-*]) apply.
+              if (typeof value === 'string') {
+                resolvedPublicPath = compilation.getPath(value);
+              }
             });
           });
         },

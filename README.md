@@ -57,7 +57,23 @@ export default defineConfig({
 - `[git-revision-branch]` (only when `branch: true`)
 - `[git-revision-last-commit-datetime]`
 
-> Rspack does not expose webpack's `compilation.hooks.assetPath`, so substitutions are applied to string `output` fields (`filename`, `chunkFilename`, `publicPath`, …) when the plugin is applied.
+Rspack has no `compilation.hooks.assetPath`, so this plugin mirrors webpack by:
+1. Rewriting `output.*` string/function templates and loader/`asset/resource` names
+2. Patching `compilation.getPath` / `getAssetPath` for late paths (CSS, assets)
+
+## Feature parity (`git-revision-webpack-plugin`)
+
+| Feature | webpack plugin | `@heyq02/rspack-plugin-git-revision` |
+| --- | --- | --- |
+| Emit `VERSION` / `COMMITHASH` / `LASTCOMMITDATETIME` | ✅ | ✅ |
+| Emit `BRANCH` when `branch: true` | ✅ | ✅ |
+| Public API getters | ✅ | ✅ (+ Rsbuild wrapper getters) |
+| Path tokens in `output.filename` / `publicPath` | ✅ (`assetPath`) | ✅ (config rewrite + `getPath` patch) |
+| `output.filename` as function | ✅ (#39) | ✅ |
+| CSS / asset module path tokens | ✅ (`assetPath`) | ✅ (`getPath` patch) |
+| `lightweightTags` / custom `*Command` / `gitWorkTree` | ✅ | ✅ |
+| Shell-based custom git commands | ✅ | ✅ |
+| Rsbuild plugin | ❌ | ✅ `pluginGitRevision()` |
 
 ## Options
 
@@ -121,7 +137,8 @@ Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) fo
 | `tests/plugin.test.ts` / `tests/unit-options.test.ts` | Options + public API against a temp git repo |
 | `tests/path-substitutions.test.ts` | `[git-revision-*]` rewriting on `output` / rules |
 | `tests/fixture-integration.test.ts` | Upstream fixture values (`v1.0.0-1-g9a15b3b`, etc.) on Rspack |
-| `tests/webpack-parity.test.ts` | Side-by-side: `git-revision-webpack-plugin` vs this plugin on the same fixtures |
+| `tests/webpack-parity.test.ts` | Side-by-side asset / filename parity |
+| `tests/feature-parity.test.ts` | Documented API / path / CSS / custom-command parity |
 
 Fixtures under `fixtures/` are copied from [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) so expected VERSION / COMMITHASH / BRANCH stay bit-identical.
 
