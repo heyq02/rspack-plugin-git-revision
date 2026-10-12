@@ -4,12 +4,20 @@ import {
   type GitRevisionPluginOptions,
 } from './plugin.ts';
 
+export type PluginGitRevision = RsbuildPlugin & {
+  version: () => string;
+  commithash: () => string;
+  branch: () => string;
+  lastcommitdatetime: () => string;
+};
+
 /**
  * Rsbuild plugin wrapper around {@link GitRevisionRspackPlugin}.
+ * Exposes the same public API getters for use with DefinePlugin-style defines.
  */
 export function pluginGitRevision(
   options: GitRevisionPluginOptions = {},
-): RsbuildPlugin {
+): PluginGitRevision {
   const rspackPlugin = new GitRevisionRspackPlugin(options);
 
   return {
@@ -21,6 +29,10 @@ export function pluginGitRevision(
         return config;
       });
     },
+    version: () => rspackPlugin.version(),
+    commithash: () => rspackPlugin.commithash(),
+    branch: () => rspackPlugin.branch(),
+    lastcommitdatetime: () => rspackPlugin.lastcommitdatetime(),
   };
 }
 

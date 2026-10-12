@@ -1,7 +1,10 @@
 import type { Compiler, Compilation } from '@rspack/core';
 import { sources } from '@rspack/core';
 import { runGitCommand } from './helpers/run-git-command.ts';
-import { applyPathSubstitutions } from './path-substitutions.ts';
+import {
+  applyPathSubstitutions,
+  patchCompilationPathHelpers,
+} from './path-substitutions.ts';
 
 export interface BuildFileOptions {
   compiler: Compiler;
@@ -20,7 +23,7 @@ export function buildFile({
 }: BuildFileOptions): void {
   let data = '';
 
-  const substitute = (value: string) => {
+  const substituteConfig = (value: string) => {
     applyPathSubstitutions(
       compiler.options as unknown as Record<string, unknown>,
       replacePattern,
@@ -28,17 +31,21 @@ export function buildFile({
     );
   };
 
-  // Resolve early so path substitutions work even when Rspack lacks assetPath.
+  // Resolve early so string/function output templates are rewritten before emit.
   try {
     data = runGitCommand(gitWorkTree, command) ?? '';
-    substitute(data);
+    substituteConfig(data);
   } catch {
-    // Defer error to the compilation phase so builds can surface it as a warning/error.
+    // Defer error to the compilation phase so builds can surface it.
   }
 
   compiler.hooks.compilation.tap(
     'GitRevisionRspackPlugin',
     (compilation: Compilation) => {
+      // Parity with webpack `compilation.hooks.assetPath` — covers CSS / assets
+      // and any late path formatting (see upstream issues #39 / #86).
+      patchCompilationPathHelpers(compilation, replacePattern, () => data);
+
       compilation.hooks.optimizeTree.tapAsync(
         'GitRevisionRspackPlugin',
         (_chunks, _modules, callback) => {
@@ -48,7 +55,7 @@ export function buildFile({
               return;
             }
             data = res;
-            substitute(data);
+            substituteConfig(data);
             callback();
           });
         },
