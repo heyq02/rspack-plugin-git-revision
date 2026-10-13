@@ -39,8 +39,6 @@
   "scripts": {
     "automd": "automd",
     "build": "rs lib",
-    "changelog": "changelogen",
-    "changelog:sync": "changelogen gh release all",
     "check": "rs check && pnpm run typecheck",
     "check:package": "pnpm run build",
     "commitlint": "commitlint",
@@ -53,7 +51,7 @@
     "play:rspack": "pnpm build && pnpm --dir playground/rspack build",
     "prepare": "rs hooks",
     "prepublishOnly": "pnpm run build",
-    "release": "changelogen --release --no-github",
+    "release": "changelogen --release --no-output --no-github",
     "test": "rs test",
     "test:coverage": "rs test --coverage",
     "test:parity": "rs test tests/webpack-parity.test.ts tests/fixture-integration.test.ts tests/feature-parity.test.ts tests/p0-drop-in.test.ts tests/p1-assetpath.test.ts",

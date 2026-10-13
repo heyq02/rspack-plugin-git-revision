@@ -15,9 +15,7 @@
 - `pnpm run automd` - Refresh automd sections in README.md
 - `pnpm run typecheck` - Type-check with `tsc6 --noEmit` (`@typescript/typescript6`)
 - `pnpm run commitlint` - Lint commit message(s) with Conventional Commits
-- `pnpm run changelog` - Generate changelog section (changelogen → stdout / CHANGELOG.md)
-- `pnpm run changelog:sync` - Sync CHANGELOG.md sections to GitHub Releases
-- `pnpm release` - Bump version, update CHANGELOG.md, commit + tag (`changelogen --release --no-github`); push tags to publish via CI
+- `pnpm release` - Bump version, commit + tag (`changelogen --release --no-output --no-github`); push tags → CI publishes npm and creates the GitHub Release (`changelogithub`)
 - `pnpm play:rspack` / `pnpm play:rsbuild` - Smoke builds in `playground/`
 
 ## Docs
@@ -72,7 +70,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `type(scope)?:
 
 Allowed types: `feat` `fix` `docs` `style` `refactor` `perf` `test` `build` `ci` `chore` `revert`
 
-This keeps `changelogen` / GitHub Releases useful (non-conventional subjects are dropped from changelogs).
+This keeps GitHub Releases (via `changelogithub` on tag push) useful — non-conventional subjects are dropped.
 
 ## Cursor Cloud specific instructions
 
