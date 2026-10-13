@@ -22,16 +22,15 @@ function syncCompilationOutputOptions(
   compilation: Compilation,
 ): void {
   const from = compiler.options.output as Record<string, unknown>;
-  const to = (
-    compilation as Compilation & {
-      outputOptions?: Record<string, unknown>;
-    }
-  ).outputOptions;
+  // Cast both sides through Record so declaration emit accepts dynamic keys
+  // (Rspack Output types use Filename/PublicPath and may include null).
+  const to = compilation.outputOptions as Record<string, unknown> | undefined;
   if (!from || !to) return;
 
   for (const key of OUTPUT_PATH_KEYS) {
-    if (from[key] !== undefined) {
-      to[key] = from[key];
+    const value = from[key];
+    if (value != null) {
+      to[key] = value;
     }
   }
 }
