@@ -59,8 +59,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.3",
-    "@commitlint/config-conventional": "^20.5.3",
-    "@heyq02/rstack-config": "^0.0.2",
+    "@heyq02/rstack-config": "^0.0.4",
     "@rsbuild/core": "^1.6.15",
     "@rslib/core": "^1.0.3",
     "@rslint/core": "^0.9.5",

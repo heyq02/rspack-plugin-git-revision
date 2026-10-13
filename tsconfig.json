@@ -1,25 +1,7 @@
 {
+  "extends": "@heyq02/rstack-config/tsconfig",
   "compilerOptions": {
-    "lib": ["ES2022"],
-    "target": "ES2022",
-    "noEmit": true,
-    "skipLibCheck": true,
-    "types": ["rstack/types", "node"],
-    "useDefineForClassFields": true,
-    "rootDir": "src",
-
-    /* modules */
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-
-    /* type checking */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "verbatimModuleSyntax": true
+    "rootDir": "src"
   },
   "include": ["src"]
 }

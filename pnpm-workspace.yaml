@@ -29,5 +29,5 @@ minimumReleaseAgeExclude:
   - '@rstackjs/cli-win32-ia32-msvc@0.8.3'
   - '@rstackjs/cli-win32-x64-msvc@0.8.3'
   - rstack@0.8.3
-  - '@heyq02/rstack-config@0.0.2'
+  - '@heyq02/rstack-config@0.0.4'
   - eslint-plugin-de-morgan@2.2.1

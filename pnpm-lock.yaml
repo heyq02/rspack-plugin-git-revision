@@ -169,12 +169,9 @@ importers:
       '@commitlint/cli':
         specifier: ^20.5.3
         version: 20.5.3(@types/node@26.6.5)(@typescript/typescript6@6.0.2)(conventional-commits-parser@6.4.0)
-      '@commitlint/config-conventional':
-        specifier: ^20.5.3
-        version: 20.5.3
       '@heyq02/rstack-config':
-        specifier: ^0.0.2
-        version: 0.0.2(@rsbuild/core@1.7.6)(@rslib/core@1.0.3(@typescript/typescript6@6.0.2)(core-js@3.47.0))(@rslint/core@0.9.5(jiti@2.7.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))(rstack@0.8.3(@typescript/typescript6@6.0.2)(core-js@3.47.0)(jiti@2.7.0))
+        specifier: ^0.0.4
+        version: 0.0.4(@commitlint/cli@20.5.3(@types/node@26.6.5)(@typescript/typescript6@6.0.2)(conventional-commits-parser@6.4.0))(@rsbuild/core@1.7.6)(@rslib/core@1.0.3(@typescript/typescript6@6.0.2)(core-js@3.47.0))(@rslint/core@0.9.5(jiti@2.7.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))(rstack@0.8.3(@typescript/typescript6@6.0.2)(core-js@3.47.0)(jiti@2.7.0))
       '@rsbuild/core':
         specifier: ^1.6.15
         version: 1.7.6
@@ -444,14 +441,17 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@heyq02/rstack-config@0.0.2':
-    resolution: {integrity: sha512-kO64YbONypMTv6861a9DKKDQqd3uFSbU/ttysN6eEAm5Ii7QOrjNFo2lK+6udUVe2NBXwG8ECbRniHAlSfmKhg==}
+  '@heyq02/rstack-config@0.0.4':
+    resolution: {integrity: sha512-yTg8scA6mP71uMWNCBXPRoECMzDx6iac9bzkK787PhakbpjEtnV2zMVHtSTv5IE7yaGJ/dxq01XcYOj0r1wkHw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
+      '@commitlint/cli': ^20.0.0
       '@rslib/core': ^1.0.0
       '@rslint/core': ^0.9.0
       rstack: ^0.8.0
     peerDependenciesMeta:
+      '@commitlint/cli':
+        optional: true
       '@rslib/core':
         optional: true
       '@rslint/core':
@@ -3272,8 +3272,9 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@heyq02/rstack-config@0.0.2(@rsbuild/core@1.7.6)(@rslib/core@1.0.3(@typescript/typescript6@6.0.2)(core-js@3.47.0))(@rslint/core@0.9.5(jiti@2.7.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))(rstack@0.8.3(@typescript/typescript6@6.0.2)(core-js@3.47.0)(jiti@2.7.0))':
+  '@heyq02/rstack-config@0.0.4(@commitlint/cli@20.5.3(@types/node@26.6.5)(@typescript/typescript6@6.0.2)(conventional-commits-parser@6.4.0))(@rsbuild/core@1.7.6)(@rslib/core@1.0.3(@typescript/typescript6@6.0.2)(core-js@3.47.0))(@rslint/core@0.9.5(jiti@2.7.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))(rstack@0.8.3(@typescript/typescript6@6.0.2)(core-js@3.47.0)(jiti@2.7.0))':
     dependencies:
+      '@commitlint/config-conventional': 20.5.3
       '@eslint-community/eslint-plugin-eslint-comments': 4.8.1(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))
       eslint-plugin-de-morgan: 2.2.1(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))
       eslint-plugin-regexp: 3.3.1(eslint@10.12.0(jiti@2.7.0)(supports-color@8.1.1))
@@ -3282,6 +3283,7 @@ snapshots:
       rsbuild-plugin-arethetypeswrong: 0.4.0(@rsbuild/core@1.7.6)(@typescript/typescript6@6.0.2)
       rsbuild-plugin-publint: 1.0.0(@rsbuild/core@1.7.6)
     optionalDependencies:
+      '@commitlint/cli': 20.5.3(@types/node@26.6.5)(@typescript/typescript6@6.0.2)(conventional-commits-parser@6.4.0)
       '@rslib/core': 1.0.3(@typescript/typescript6@6.0.2)(core-js@3.47.0)
       '@rslint/core': 0.9.5(jiti@2.7.0)
       rstack: 0.8.3(@typescript/typescript6@6.0.2)(core-js@3.47.0)(jiti@2.7.0)
