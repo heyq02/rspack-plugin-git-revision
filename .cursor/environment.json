@@ -1,4 +1,0 @@
-{
-  "name": "rspack-plugin-git-revision",
-  "install": "bash .cursor/install.sh"
-}
