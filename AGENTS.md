@@ -34,13 +34,19 @@
 
 - `src/plugin.ts` — `GitRevisionRspackPlugin` (webpack-plugin API parity)
 - `src/rsbuild-plugin.ts` — `pluginGitRevision()` Rsbuild wrapper + getters
-- `src/build-file.ts` — emit assets + path substitutions
-- `src/path-substitutions.ts` — config rewrite + `getPath` / `getAssetPath` patch
-- `src/helpers/` — shell git execution helpers
+- `src/build-file.ts` — emit assets, live path substitution refresh, `compilation.outputOptions` sync after `optimizeTree`
+- `src/path-substitutions.ts` — keep original `[git-revision-*]` templates; rematerialize via live filename functions + `getPath` / `getAssetPath` patch
+- `src/helpers/` — shell git execution helpers (`buildGitCommand` / `runGitCommand`)
 - `fixtures/` — copied from `git-revision-webpack-plugin` for bit-identical values
-- `tests/` — unit, fixture integration, webpack/feature parity
+- `tests/` — unit, fixture integration, webpack/feature parity, P0 drop-in / P1 assetPath suites
 - `playground/` — Rspack / Rsbuild smoke apps
 - Self-host: `rstack.config.ts` uses `define.extends([rstack(...)])` from `@heyq02/rstack-config`
+
+### Path substitution notes (agents)
+
+- Rspack has no `compilation.hooks.assetPath`; do not reintroduce one-shot string burns of git tokens on `output.filename` — that breaks watch rebuilds when HEAD changes.
+- Prefer live getters / rematerialization from the original tokenized template, then sync onto `compilation.outputOptions` in `optimizeTree`.
+- Regression coverage: `tests/p1-assetpath.test.ts` (“watch rebuild refreshes COMMITHASH and filename after a new commit”).
 
 ## Tools
 

@@ -16,6 +16,7 @@ Emits `VERSION`, `COMMITHASH`, `LASTCOMMITDATETIME`, and optionally `BRANCH` dur
 - Emit `VERSION` / `COMMITHASH` / `LASTCOMMITDATETIME` assets (and `BRANCH` when enabled)
 - Public API getters for DefinePlugin-style defines
 - Path tokens in `output.filename` / `publicPath` / CSS / asset modules
+- Watch rebuilds refresh path tokens when git HEAD changes
 - Custom git commands, `lightweightTags`, `gitWorkTree`
 - Rsbuild plugin: `pluginGitRevision()` with the same getters
 - Tooling via [Rstack CLI](https://rstack.rs/) + [`@heyq02/rstack-config`](https://github.com/heyq02/rstack-config)
@@ -77,8 +78,9 @@ export default defineConfig({
 
 Rspack has no `compilation.hooks.assetPath`, so this plugin mirrors webpack by:
 
-1. Rewriting `output.*` string/function templates and loader / `asset/resource` names
+1. Keeping the original tokenized templates and re-materializing substituted values on each git refresh (filename-like fields use live functions so watch rebuilds pick up a new HEAD)
 2. Patching `compilation.getPath` / `getAssetPath` for late paths (CSS, assets)
+3. Syncing refreshed values onto `compilation.outputOptions` after `optimizeTree`
 
 ### Plugin API
 
@@ -114,12 +116,13 @@ Custom `*Command` options are appended to a shell `git …` invocation **without
 | Emit `VERSION` / `COMMITHASH` / `LASTCOMMITDATETIME`  | ✅                            | ✅                                    |
 | Emit `BRANCH` when `branch: true`                     | ✅                            | ✅                                    |
 | Public API getters                                    | ✅                            | ✅ (+ Rsbuild wrapper getters)        |
-| Path tokens in `output.filename` / `publicPath`       | ✅ (`assetPath`)              | ✅ (config rewrite + `getPath` patch) |
-| `output.filename` as function                         | ✅ (#39)                      | ✅                                    |
-| CSS / asset module path tokens                        | ✅ (`assetPath`)              | ✅ (`getPath` patch)                  |
-| `lightweightTags` / custom `*Command` / `gitWorkTree` | ✅                            | ✅                                    |
-| Shell-based custom git commands                       | ✅                            | ✅                                    |
-| Rsbuild plugin                                        | ❌                            | ✅ `pluginGitRevision()`              |
+| Path tokens in `output.filename` / `publicPath`       | ✅ (`assetPath`)              | ✅ (live rematerialize + `getPath` patch) |
+| Watch rebuild refreshes path tokens after new commit  | ✅ (`assetPath`)              | ✅ (live templates + `outputOptions` sync) |
+| `output.filename` as function                         | ✅ (#39)                      | ✅                                         |
+| CSS / asset module path tokens                        | ✅ (`assetPath`)              | ✅ (`getPath` patch)                       |
+| `lightweightTags` / custom `*Command` / `gitWorkTree` | ✅                            | ✅                                         |
+| Shell-based custom git commands                       | ✅                            | ✅                                         |
+| Rsbuild plugin                                        | ❌                            | ✅ `pluginGitRevision()`                   |
 
 ## Development
 
@@ -149,8 +152,8 @@ pnpm play:rsbuild
 | `tests/fixture-integration.test.ts`                          | Upstream fixture values on Rspack                              |
 | `tests/webpack-parity.test.ts`                               | Side-by-side asset / filename parity                           |
 | `tests/feature-parity.test.ts`                               | Documented API / path / CSS / custom-command parity            |
-| `tests/p0-drop-in.test.ts`                                   | chunkFilename / datetime tokens, negative git, DefinePlugin    |
-| `tests/p1-assetpath.test.ts`                                 | late getPath, file-loader query, watch mutation, Rsbuild build |
+| `tests/p0-drop-in.test.ts`                                   | chunkFilename / datetime tokens, negative git, DefinePlugin |
+| `tests/p1-assetpath.test.ts`                                 | late getPath, file-loader query, watch + new-commit refresh, Rsbuild build |
 
 Fixtures under `fixtures/` are copied from [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) so expected VERSION / COMMITHASH / BRANCH stay bit-identical.
 
