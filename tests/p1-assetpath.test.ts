@@ -318,9 +318,9 @@ describe('P1: early options mutation and watch rebuild', () => {
         try {
           if (builds === 1) {
             expect(readAsset(buildDir, 'COMMITHASH')).toBe(hash1);
-            expect(
-              fs.existsSync(path.join(buildDir, `main-${hash1}.js`)),
-            ).toBe(true);
+            expect(fs.existsSync(path.join(buildDir, `main-${hash1}.js`))).toBe(
+              true,
+            );
 
             // New commit changes HEAD; then touch the entry to trigger rebuild.
             fs.writeFileSync(

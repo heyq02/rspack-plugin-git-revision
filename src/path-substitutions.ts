@@ -11,23 +11,23 @@
 
 export type PathSubstitutionData = string | (() => string);
 
-type PatternEntry = {
+interface PatternEntry {
   re: RegExp;
   getData: () => string;
-};
+}
 
-type StringFieldState = {
+interface StringFieldState {
   kind: 'string';
   original: string;
   patterns: Map<string, PatternEntry>;
-};
+}
 
-type FunctionFieldState = {
+interface FunctionFieldState {
   kind: 'function';
   original: (...args: unknown[]) => unknown;
   patterns: Map<string, PatternEntry>;
   wrapped: (...args: unknown[]) => unknown;
-};
+}
 
 type FieldState = StringFieldState | FunctionFieldState;
 
@@ -198,9 +198,7 @@ function walkRules(
       if (use && typeof use === 'object') {
         const u = use as Record<string, unknown>;
         const opts = (u.options ?? u.query) as
-          | Record<string, unknown>
-          | string
-          | undefined;
+          Record<string, unknown> | string | undefined;
         if (opts && typeof opts === 'object') {
           replaceField(opts, 'name', replacePattern, getData);
           replaceField(opts, 'filename', replacePattern, getData);
@@ -209,10 +207,7 @@ function walkRules(
           if (u.options !== undefined) u.options = next;
           else if (u.query !== undefined) u.query = next;
         }
-        if (
-          typeof u.loader === 'string' &&
-          /\[git-revision-/i.test(u.loader)
-        ) {
+        if (typeof u.loader === 'string' && /\[git-revision-/i.test(u.loader)) {
           u.loader = u.loader.replace(replacePattern, getData());
         }
       }

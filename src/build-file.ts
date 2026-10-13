@@ -22,9 +22,11 @@ function syncCompilationOutputOptions(
   compilation: Compilation,
 ): void {
   const from = compiler.options.output as Record<string, unknown>;
-  const to = (compilation as Compilation & {
-    outputOptions?: Record<string, unknown>;
-  }).outputOptions;
+  const to = (
+    compilation as Compilation & {
+      outputOptions?: Record<string, unknown>;
+    }
+  ).outputOptions;
   if (!from || !to) return;
 
   for (const key of OUTPUT_PATH_KEYS) {
