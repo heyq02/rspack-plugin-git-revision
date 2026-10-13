@@ -4,7 +4,9 @@
  * and a full Rsbuild build (not only getters).
  */
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { describe, expect, it } from '@rstest/core';
 import { createRsbuild } from '@rsbuild/core';
 import { rspack, sources, type Compiler } from '@rspack/core';
@@ -12,6 +14,7 @@ import { GitRevisionRspackPlugin } from '../src/plugin.ts';
 import { pluginGitRevision } from '../src/rsbuild-plugin.ts';
 import { applyPathSubstitutions } from '../src/path-substitutions.ts';
 import { EXPECTED, prepareFixture, readAsset } from './helpers/fixture.ts';
+import { initTempGitRepo } from './helpers/temp-git.ts';
 
 describe('P1: late getPath path helpers', () => {
   it('substitutes tokens when a plugin emits via compilation.getPath only', async () => {
@@ -187,8 +190,12 @@ describe('P1: early options mutation and watch rebuild', () => {
       });
     });
 
-    const filename = String(compiler.options.output.filename);
-    const publicPath = String(compiler.options.output.publicPath);
+    const resolve = (value: unknown) =>
+      typeof value === 'function'
+        ? String((value as () => string)())
+        : String(value);
+    const filename = resolve(compiler.options.output.filename);
+    const publicPath = resolve(compiler.options.output.publicPath);
     expect(filename).toBe(`[name]-${EXPECTED.commithash}.js`);
     expect(publicPath).toBe(`https://cdn/${EXPECTED.version}/`);
     expect(filename.includes('[git-revision-')).toBe(false);
@@ -264,6 +271,101 @@ describe('P1: early options mutation and watch rebuild', () => {
     });
 
     expect(builds).toBeGreaterThanOrEqual(2);
+  }, 90_000);
+
+  it('watch rebuild refreshes COMMITHASH and filename after a new commit', async () => {
+    const gitWorkTree = initTempGitRepo();
+    const buildDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), 'git-revision-watch-build-'),
+    );
+    const entry = path.join(gitWorkTree, 'index.js');
+    fs.writeFileSync(entry, `console.log('watch-commit-1');\n`);
+
+    const plugin = new GitRevisionRspackPlugin({ gitWorkTree });
+    const hash1 = plugin.commithash();
+    expect(hash1).toMatch(/^[0-9a-f]{40}$/);
+
+    const compiler = rspack({
+      mode: 'development',
+      context: gitWorkTree,
+      entry: './index.js',
+      watch: true,
+      output: {
+        path: buildDir,
+        clean: false,
+        filename: '[name]-[git-revision-hash].js',
+      },
+      plugins: [plugin],
+    });
+
+    let builds = 0;
+    let hash2 = '';
+
+    await new Promise<void>((resolve, reject) => {
+      const watching = compiler.watch({}, (err, stats) => {
+        if (err) {
+          watching.close(() => reject(err));
+          return;
+        }
+        if (stats?.hasErrors()) {
+          watching.close(() =>
+            reject(new Error(stats.toString({ errors: true }))),
+          );
+          return;
+        }
+
+        builds += 1;
+        try {
+          if (builds === 1) {
+            expect(readAsset(buildDir, 'COMMITHASH')).toBe(hash1);
+            expect(
+              fs.existsSync(path.join(buildDir, `main-${hash1}.js`)),
+            ).toBe(true);
+
+            // New commit changes HEAD; then touch the entry to trigger rebuild.
+            fs.writeFileSync(
+              path.join(gitWorkTree, 'extra.txt'),
+              'second commit\n',
+            );
+            execFileSync('git', ['add', 'extra.txt'], { cwd: gitWorkTree });
+            execFileSync('git', ['commit', '-m', 'second'], {
+              cwd: gitWorkTree,
+            });
+            hash2 = execFileSync('git', ['rev-parse', 'HEAD'], {
+              cwd: gitWorkTree,
+              encoding: 'utf8',
+            }).trim();
+            expect(hash2).not.toBe(hash1);
+
+            fs.writeFileSync(entry, `console.log('watch-commit-2');\n`);
+            return;
+          }
+
+          const resolve = (value: unknown) =>
+            typeof value === 'function'
+              ? String((value as () => string)())
+              : String(value);
+          expect(readAsset(buildDir, 'COMMITHASH')).toBe(hash2);
+          expect(fs.existsSync(path.join(buildDir, `main-${hash2}.js`))).toBe(
+            true,
+          );
+          expect(resolve(compiler.options.output.filename)).toBe(
+            `[name]-${hash2}.js`,
+          );
+        } catch (assertionError) {
+          watching.close(() => reject(assertionError));
+          return;
+        }
+
+        watching.close((closeErr) => {
+          if (closeErr) reject(closeErr);
+          else resolve();
+        });
+      });
+    });
+
+    expect(builds).toBeGreaterThanOrEqual(2);
+    expect(hash2).toMatch(/^[0-9a-f]{40}$/);
   }, 90_000);
 });
 
