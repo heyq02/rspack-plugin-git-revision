@@ -1,7 +1,7 @@
 export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
-    // Keep subjects short enough for changelogen / GH release lists.
+    // Keep subjects short enough for GitHub Release lists (changelogithub).
     'header-max-length': [2, 'always', 100],
     'type-enum': [
       2,
