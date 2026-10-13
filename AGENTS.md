@@ -15,7 +15,7 @@
 - `pnpm run automd` - Refresh automd sections in README.md
 - `pnpm run typecheck` - Type-check with `tsc6 --noEmit` (`@typescript/typescript6`)
 - `pnpm run commitlint` - Lint commit message(s) with Conventional Commits
-- `pnpm release` - Bump version, commit + tag (`changelogen --release --no-output --no-github`); push tags → CI publishes npm and creates the GitHub Release (`changelogithub`)
+- `pnpm release` / `bumpp` - Version bump via global `bumpp` (commit + tag + push); CI then publishes npm and creates the GitHub Release (`changelogithub`)
 - `pnpm play:rspack` / `pnpm play:rsbuild` - Smoke builds in `playground/`
 
 ## Docs
