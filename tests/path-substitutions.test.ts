@@ -13,8 +13,14 @@ describe('applyPathSubstitutions', () => {
     applyPathSubstitutions(options, /\[git-revision-hash\]/gi, 'abc');
     applyPathSubstitutions(options, /\[git-revision-version\]/gi, 'v1');
 
-    expect(options.output.filename).toBe('[name]-abc.js');
-    expect(options.output.publicPath).toBe('https://cdn/v1/');
+    const filename = options.output.filename as string | (() => string);
+    const publicPath = options.output.publicPath as string | (() => string);
+    expect(typeof filename === 'function' ? filename() : filename).toBe(
+      '[name]-abc.js',
+    );
+    expect(typeof publicPath === 'function' ? publicPath() : publicPath).toBe(
+      'https://cdn/v1/',
+    );
   });
 
   it('rewrites asset/resource generator.filename', () => {
@@ -34,9 +40,12 @@ describe('applyPathSubstitutions', () => {
 
     applyPathSubstitutions(options, /\[git-revision-version\]/gi, 'v2');
     const rule = options.module.rules[0] as {
-      generator: { filename: string };
+      generator: { filename: string | (() => string) };
     };
-    expect(rule.generator.filename).toBe('[name]-v2[ext]');
+    const genFilename = rule.generator.filename;
+    expect(
+      typeof genFilename === 'function' ? genFilename() : genFilename,
+    ).toBe('[name]-v2[ext]');
   });
 
   it('rewrites file-loader options.name', () => {
@@ -58,8 +67,11 @@ describe('applyPathSubstitutions', () => {
 
     applyPathSubstitutions(options, /\[git-revision-branch\]/gi, 'main');
     const rule = options.module.rules[0] as {
-      use: { options: { name: string } };
+      use: { options: { name: string | (() => string) } };
     };
-    expect(rule.use.options.name).toBe('[name]-main.[ext]');
+    const name = rule.use.options.name;
+    expect(typeof name === 'function' ? name() : name).toBe(
+      '[name]-main.[ext]',
+    );
   });
 });

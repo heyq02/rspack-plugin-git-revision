@@ -6,6 +6,35 @@ import {
   patchCompilationPathHelpers,
 } from './path-substitutions.ts';
 
+const OUTPUT_PATH_KEYS = [
+  'filename',
+  'chunkFilename',
+  'cssFilename',
+  'cssChunkFilename',
+  'publicPath',
+  'hotUpdateChunkFilename',
+  'hotUpdateMainFilename',
+  'assetModuleFilename',
+] as const;
+
+function syncCompilationOutputOptions(
+  compiler: Compiler,
+  compilation: Compilation,
+): void {
+  const from = compiler.options.output as Record<string, unknown>;
+  // Cast both sides through Record so declaration emit accepts dynamic keys
+  // (Rspack Output types use Filename/PublicPath and may include null).
+  const to = compilation.outputOptions as Record<string, unknown> | undefined;
+  if (!from || !to) return;
+
+  for (const key of OUTPUT_PATH_KEYS) {
+    const value = from[key];
+    if (value != null) {
+      to[key] = value;
+    }
+  }
+}
+
 export interface BuildFileOptions {
   compiler: Compiler;
   gitWorkTree?: string;
@@ -23,18 +52,19 @@ export function buildFile({
 }: BuildFileOptions): void {
   let data = '';
 
-  const substituteConfig = (value: string) => {
+  // Live getter so watch rebuilds re-read fresh git values (not one-shot strings).
+  const substituteConfig = () => {
     applyPathSubstitutions(
       compiler.options as unknown as Record<string, unknown>,
       replacePattern,
-      value,
+      () => data,
     );
   };
 
   // Resolve early so string/function output templates are rewritten before emit.
   try {
     data = runGitCommand(gitWorkTree, command) ?? '';
-    substituteConfig(data);
+    substituteConfig();
   } catch {
     // Defer error to the compilation phase so builds can surface it.
   }
@@ -55,7 +85,11 @@ export function buildFile({
               return;
             }
             data = res;
-            substituteConfig(data);
+            // Re-install / refresh live getters; values resolve via () => data.
+            substituteConfig();
+            // Rspack snapshots output templates onto the compilation; push
+            // fresh substituted values so watch rebuilds don't keep stale hashes.
+            syncCompilationOutputOptions(compiler, compilation);
             callback();
           });
         },

@@ -67,8 +67,12 @@ export async function buildWithRspack(
           compiler.hooks.compilation.tap('CapturePublicPath', (compilation) => {
             compilation.hooks.processAssets.tap('CapturePublicPath', () => {
               const value = compilation.outputOptions.publicPath;
-              if (typeof value === 'string') {
-                resolvedPublicPath = compilation.getPath(value);
+              const template =
+                typeof value === 'function'
+                  ? (value as (data: object) => string)({})
+                  : value;
+              if (typeof template === 'string') {
+                resolvedPublicPath = compilation.getPath(template);
               }
             });
           });
