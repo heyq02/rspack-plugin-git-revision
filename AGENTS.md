@@ -38,7 +38,7 @@
 - `fixtures/` — copied from `git-revision-webpack-plugin` for bit-identical values
 - `tests/` — unit, fixture integration, webpack/feature parity, P0 drop-in / P1 assetPath suites
 - `playground/` — Rspack / Rsbuild smoke apps
-- Self-host: `rstack.config.ts` uses `define.extends([rstack(...)])` from `@heyq02/rstack-config`
+- Self-host: `rstack.config.ts` uses `define.extends([rstack(...)])` from `@heyq02/rstack-config`; `commitlint.config.js` re-exports `@heyq02/rstack-config/commitlint`; `tsconfig.json` extends `@heyq02/rstack-config/tsconfig` (`rootDir` / `include` stay local)
 
 ### Path substitution notes (agents)
 
@@ -53,7 +53,8 @@
 - **Rstack CLI** (`rs`): build (`rs lib`), lint (`rs lint`), format (`rs fmt`), tests (`rs test`), hooks (`rs hooks`)
 - **Rslib**: package build via `@heyq02/rstack-config` `nodeLib` (publint + attw)
 - **Package checks**: build-time [`rsbuild-plugin-publint`](https://github.com/rstackjs/rsbuild-plugin-publint) + [`rsbuild-plugin-arethetypeswrong`](https://github.com/rstackjs/rsbuild-plugin-arethetypeswrong)
-- **TypeScript**: `typescript` resolves to `@typescript/typescript6` so attw can use the JS API
+- **TypeScript**: `typescript` resolves to `@typescript/typescript6` so attw can use the JS API; compiler options come from `@heyq02/rstack-config/tsconfig`
+- **Commitlint**: `@heyq02/rstack-config/commitlint` (Conventional Commits, header max 100)
 - **Rstest**: unit / parity tests, with V8 coverage from `@rstest/coverage-v8`
 - **Rslint**: lint through `rs lint` via `@heyq02/rstack-config`
 
