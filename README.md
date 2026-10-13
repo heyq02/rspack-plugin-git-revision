@@ -111,12 +111,12 @@ Custom `*Command` options are appended to a shell `git …` invocation **without
 
 ## Feature parity
 
-| Feature                                               | `git-revision-webpack-plugin` | `@heyq02/rspack-plugin-git-revision`  |
-| ----------------------------------------------------- | ----------------------------- | ------------------------------------- |
-| Emit `VERSION` / `COMMITHASH` / `LASTCOMMITDATETIME`  | ✅                            | ✅                                    |
-| Emit `BRANCH` when `branch: true`                     | ✅                            | ✅                                    |
-| Public API getters                                    | ✅                            | ✅ (+ Rsbuild wrapper getters)        |
-| Path tokens in `output.filename` / `publicPath`       | ✅ (`assetPath`)              | ✅ (live rematerialize + `getPath` patch) |
+| Feature                                               | `git-revision-webpack-plugin` | `@heyq02/rspack-plugin-git-revision`       |
+| ----------------------------------------------------- | ----------------------------- | ------------------------------------------ |
+| Emit `VERSION` / `COMMITHASH` / `LASTCOMMITDATETIME`  | ✅                            | ✅                                         |
+| Emit `BRANCH` when `branch: true`                     | ✅                            | ✅                                         |
+| Public API getters                                    | ✅                            | ✅ (+ Rsbuild wrapper getters)             |
+| Path tokens in `output.filename` / `publicPath`       | ✅ (`assetPath`)              | ✅ (live rematerialize + `getPath` patch)  |
 | Watch rebuild refreshes path tokens after new commit  | ✅ (`assetPath`)              | ✅ (live templates + `outputOptions` sync) |
 | `output.filename` as function                         | ✅ (#39)                      | ✅                                         |
 | CSS / asset module path tokens                        | ✅ (`assetPath`)              | ✅ (`getPath` patch)                       |
@@ -144,15 +144,15 @@ pnpm play:rsbuild
 
 ### Test matrix
 
-| Suite                                                        | What it covers                                                 |
-| ------------------------------------------------------------ | -------------------------------------------------------------- |
-| `tests/unit-options.test.ts` / `tests/integration.test.ts`   | Options, getters, emit against a temp git repo                 |
-| `tests/build-git-command.test.ts` / `tests/git-edge.test.ts` | Shell command builder + detached HEAD / describe edges         |
-| `tests/path-substitutions.test.ts`                           | `[git-revision-*]` rewriting on `output` / rules               |
-| `tests/fixture-integration.test.ts`                          | Upstream fixture values on Rspack                              |
-| `tests/webpack-parity.test.ts`                               | Side-by-side asset / filename parity                           |
-| `tests/feature-parity.test.ts`                               | Documented API / path / CSS / custom-command parity            |
-| `tests/p0-drop-in.test.ts`                                   | chunkFilename / datetime tokens, negative git, DefinePlugin |
+| Suite                                                        | What it covers                                                             |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `tests/unit-options.test.ts` / `tests/integration.test.ts`   | Options, getters, emit against a temp git repo                             |
+| `tests/build-git-command.test.ts` / `tests/git-edge.test.ts` | Shell command builder + detached HEAD / describe edges                     |
+| `tests/path-substitutions.test.ts`                           | `[git-revision-*]` rewriting on `output` / rules                           |
+| `tests/fixture-integration.test.ts`                          | Upstream fixture values on Rspack                                          |
+| `tests/webpack-parity.test.ts`                               | Side-by-side asset / filename parity                                       |
+| `tests/feature-parity.test.ts`                               | Documented API / path / CSS / custom-command parity                        |
+| `tests/p0-drop-in.test.ts`                                   | chunkFilename / datetime tokens, negative git, DefinePlugin                |
 | `tests/p1-assetpath.test.ts`                                 | late getPath, file-loader query, watch + new-commit refresh, Rsbuild build |
 
 Fixtures under `fixtures/` are copied from [`git-revision-webpack-plugin`](https://github.com/pirelenito/git-revision-webpack-plugin) so expected VERSION / COMMITHASH / BRANCH stay bit-identical.
