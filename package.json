@@ -1,6 +1,6 @@
 {
   "name": "@heyq02/rspack-plugin-git-revision",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Rspack / Rsbuild plugin that emits git revision assets (VERSION, COMMITHASH, BRANCH, LASTCOMMITDATETIME).",
   "keywords": [
     "branch",
